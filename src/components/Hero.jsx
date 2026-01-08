@@ -1,4 +1,5 @@
 import { motion } from "framer-motion"
+import { useState } from "react"
 import profilePic from "../assets/sahilDeoreProfile.png"
 import { HERO_CONTENT } from "../constants"
 const containerVariants = {
@@ -18,6 +19,16 @@ const childVariants = {
   visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
 }
 const Hero = () => {
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleDownload = () => {
+    setIsLoading(true)
+    // Simulate download process
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 2000)
+  }
+
   return (
     <div className="pb-4 lg:mb-36">
       <div className="flex flex-wrap lg:flex-row-reverse">
@@ -52,24 +63,66 @@ const Hero = () => {
               variants={childVariants}
               className="bg-gradient-to-r from-stone-300 to-stone-600 bg-clip-text text-3xl tracking-tight text-transparent"
             >
-              Full Stack Developer
+              Full-Stack Developer | Framer Specialist
             </motion.span>
-            <motion.p
+            <motion.div
               variants={childVariants}
-              className="my-2 max-w-lg py-6 text-xl leading-relaxed tracking-tighter"
+              className="my-2 max-w-lg py-6 space-y-4"
             >
-              {HERO_CONTENT}
-            </motion.p>
-            <motion.a
-              variants={childVariants}
-              href="/resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              download
-              className="bg-white rounded-full p-4 text-sm text-stone-800 mb-10"
-            >
-              Download Resume
-            </motion.a>
+              {HERO_CONTENT.map((paragraph, index) => (
+                <p
+                  key={index}
+                  className="text-xl leading-relaxed tracking-tighter"
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </motion.div>
+            <motion.div variants={childVariants} className="flex flex-wrap gap-4 mb-10">
+              {/* Primary CTA - View Projects */}
+              <a
+                href="#projects"
+                className="inline-flex items-center gap-2 bg-white rounded-full px-6 py-4 text-sm font-medium text-stone-800 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer"
+              >
+                View Projects
+              </a>
+              
+              {/* Secondary CTA - Download Resume */}
+              <a
+                href="/resume.pdf"
+                download
+                onClick={handleDownload}
+                className="inline-flex items-center gap-2 bg-transparent border-2 border-white rounded-full px-6 py-4 text-sm font-medium text-white hover:bg-white hover:text-stone-800 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer"
+              >
+                {isLoading ? (
+                  <>
+                    <svg
+                      className="animate-spin h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Downloading...
+                  </>
+                ) : (
+                  "Download Resume"
+                )}
+              </a>
+            </motion.div>
           </motion.div>
         </div>
       </div>

@@ -12,7 +12,9 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "framer-motion": "^12.23.12",
+    "@heroui/react": "^2.8.7",
+    "@heroui/system": "^2.4.25",
+    "framer-motion": "^12.24.12",
     "lucide-react": "^0.539.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

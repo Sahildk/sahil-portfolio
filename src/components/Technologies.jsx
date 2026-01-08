@@ -1,7 +1,7 @@
 import { motion } from "framer-motion"
 import { FaNodeJs } from "react-icons/fa6"
 import { RiReactjsLine, RiTailwindCssFill } from "react-icons/ri"
-import { SiMongodb } from "react-icons/si"
+import { SiFramer, SiMongodb } from "react-icons/si"
 import { TbBrandNextjs } from "react-icons/tb"
 
 const iconVariants = duration => ({
@@ -40,6 +40,14 @@ const Technologies = () => {
           variants={iconVariants(2.5)}
         >
           <RiReactjsLine className="text-7xl text-[#61DAFB]" />
+        </motion.div>
+        <motion.div
+          initial="initial"
+          animate="animate"
+          variants={iconVariants(4)}
+          className="p-4"
+        >
+          <SiFramer className="text-7xl" />
         </motion.div>
         <motion.div
           initial="initial"

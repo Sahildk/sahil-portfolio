@@ -3,15 +3,17 @@ import project2 from "../assets/projects/project-2.webp"
 import project3 from "../assets/projects/project-3.webp"
 import project4 from "../assets/projects/project-4.webp"
 
-export const HERO_CONTENT = `I am a full-stack web developer with 3 years of experience, I build fast, scalable, and visually polished web applications using React, Next.js, Tailwind CSS, Node.js, MongoDB, and MySQL. Delivered successful projects such as responsive hotel and café websites, improving client visibility and engagement. Known for writing clean, maintainable code and optimizing performance. I also leverage AI-powered coding assistants and LLMs (GitHub Copilot, ChatGPT) to accelerate development, enhance code quality, and reduce debugging time.`
-export const ABOUT_TEXT = `I am a dedicated and versatile full stack developer with a passion for creating efficient and user-friendly web applications. With 5 years of professional experience, I have worked with a variety of technologies, including React, Next.js, Node.js, MySQL, PostgreSQL, and MongoDB. My journey in web development began with a deep curiosity for how things work, and it has evolved into a career where I continuously strive to learn and adapt to new challenges. I thrive in collaborative environments and enjoy solving complex problems to deliver high-quality solutions. Outside of coding, I enjoy staying active, exploring new technologies, and contributing to open-source projects.`
+export const HERO_CONTENT = [
+  "I build high-performance, conversion-focused websites and web applications using Framer, React, Next.js, and TypeScript.",
+  "I’ve delivered real client projects, focusing on clean UI, fast load times, SEO, and scalable architecture — combining design-to-development workflows with AI-assisted development to ship production-ready solutions efficiently."
+]
 
 export const EXPERIENCES = [
   {
     year: "June 2025 - July 2025",
     role: "Frontend Developer Intern",
     company: "Dosa Plaza India",
-    description: `Designed and developed a responsive, SEO-optimized café website using React.js, JavaScript, Tailwind CSS, and Next.js. Built reusable components, implemented smooth navigation, and optimized performance for mobile and desktop, improving load speed and search engine visibility.`,
+    description: `Developed and optimized responsive, SEO-friendly web interfaces using React, Next.js, and Tailwind CSS. Improved page performance and mobile usability while building reusable UI components for production use.`,
     technologies: ["React.js", "JavaScript", "Next.js", "Tailwind CSS"],
   },
   {
@@ -28,7 +30,7 @@ export const PROJECTS = [
     title: "E-Commerce Website",
     image: project1,
     description:
-      "A fully functional e-commerce website with features like product listing, shopping cart, and user authentication.",
+      "Built a full-stack e-commerce application with product management, secure authentication, and optimized UI for fast browsing and scalability.",
     technologies: ["React", "Tailwind CSS", "Node.js", "MongoDB"],
   },
   {
