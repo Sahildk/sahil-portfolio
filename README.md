@@ -1,6 +1,7 @@
 # 🌟 Sahil's Portfolio Website
 
-<img width="1900" height="1079" alt="image" src="https://github.com/user-attachments/assets/990aa977-b4e5-4173-9412-d7d20c4ac70e" />
+<img width="1891" height="946" alt="image" src="https://github.com/user-attachments/assets/31042a25-79df-4138-b7eb-d22fea2539ce" />
+
 
 
 ---
