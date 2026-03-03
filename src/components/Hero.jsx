@@ -53,9 +53,17 @@ const Hero = () => {
             variants={containerVariants}
             className="flex flex-col items-center lg:items-start mt-10"
           >
+            <motion.div variants={childVariants} className="flex items-center gap-2 mb-6 rounded-full border border-stone-800 bg-stone-900/50 px-4 py-2 backdrop-blur-sm">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+              </span>
+              <span className="text-sm font-medium text-stone-300">Available for Work</span>
+            </motion.div>
+            
             <motion.h2
               variants={childVariants}
-              className="pb-2 text-4xl tracking-tighter lg:text-8xl"
+              className="pb-2 text-5xl font-semibold tracking-tighter lg:text-7xl xl:text-8xl"
             >
               Sahil Deore
             </motion.h2>

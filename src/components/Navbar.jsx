@@ -1,4 +1,3 @@
-import React from "react"
 import { FaGithub, FaInstagram, FaLinkedin, FaXTwitter } from "react-icons/fa6"
 import logo from "../assets/sahilDeoreLogo.png"
 
