@@ -7,6 +7,7 @@ const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     subject: "",
     message: "",
   })
@@ -32,15 +33,20 @@ const Contact = () => {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          // Replace this Access Key with your actual Web3Forms API Key
-          access_key: "YOUR_WEB3FORMS_ACCESS_KEY_HERE",
+          access_key: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY,
           ...formData,
         }),
       })
 
       if (response.status === 200) {
         setSubmitStatus("success")
-        setFormData({ name: "", email: "", subject: "", message: "" })
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: "",
+        })
       } else {
         setSubmitStatus("error")
       }
@@ -168,6 +174,27 @@ const Contact = () => {
                   placeholder="john@example.com"
                 />
               </div>
+            </div>
+
+            <div className="flex w-full flex-col gap-2">
+              <label
+                htmlFor="phone"
+                className="text-sm font-medium text-zinc-400"
+              >
+                Phone Number{" "}
+                <span className="text-zinc-600 text-xs font-normal">
+                  (Optional)
+                </span>
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                id="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-zinc-300 outline-none transition-all focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500"
+                placeholder="+1 (555) 000-0000"
+              />
             </div>
 
             <div className="flex w-full flex-col gap-2">
