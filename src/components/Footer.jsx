@@ -15,7 +15,7 @@ const Footer = () => {
             Sahil Deore
           </span>
           <p className="mt-2 text-sm">
-            Elevating brands through premium digital experiences.
+            Building intelligent applications at the intersection of AI & full-stack development.
           </p>
         </motion.div>
 

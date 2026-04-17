@@ -1,7 +1,7 @@
 "use client"
 
 import { ArrowUpRight } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 const defaultProjects = [
   {
@@ -36,87 +36,97 @@ const defaultProjects = [
 
 export function ProjectShowcase({ projects = defaultProjects }) {
   const [hoveredIndex, setHoveredIndex] = useState(null)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [smoothPosition, setSmoothPosition] = useState({ x: 0, y: 0 })
   const [isVisible, setIsVisible] = useState(false)
+
   const containerRef = useRef(null)
   const animationRef = useRef(null)
+  // Store raw mouse target in a ref — no re-render on every mouse move
+  const targetRef = useRef({ x: 0, y: 0 })
+  const smoothRef = useRef({ x: 0, y: 0 })
 
-  useEffect(() => {
-    const lerp = (start, end, factor) => {
-      return start + (end - start) * factor
-    }
+  const lerp = (a, b, t) => a + (b - a) * t
 
-    const animate = () => {
-      setSmoothPosition((prev) => ({
-        x: lerp(prev.x, mousePosition.x, 0.15),
-        y: lerp(prev.y, mousePosition.y, 0.15),
-      }))
-      animationRef.current = requestAnimationFrame(animate)
-    }
-
-    animationRef.current = requestAnimationFrame(animate)
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current)
+  // Start RAF loop only while hovering
+  const startAnimation = useCallback(() => {
+    if (animationRef.current) return // already running
+    const tick = () => {
+      const dx = targetRef.current.x - smoothRef.current.x
+      const dy = targetRef.current.y - smoothRef.current.y
+      // Stop loop when close enough — avoids running forever
+      if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) {
+        animationRef.current = null
+        return
       }
+      smoothRef.current = {
+        x: lerp(smoothRef.current.x, targetRef.current.x, 0.15),
+        y: lerp(smoothRef.current.y, targetRef.current.y, 0.15),
+      }
+      setSmoothPosition({ ...smoothRef.current })
+      animationRef.current = requestAnimationFrame(tick)
     }
-  }, [mousePosition])
+    animationRef.current = requestAnimationFrame(tick)
+  }, [])
 
-  const handleMouseMove = (e) => {
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect()
-      setMousePosition({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      })
+  const stopAnimation = useCallback(() => {
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current)
+      animationRef.current = null
     }
-  }
+  }, [])
 
-  const handleMouseEnter = (index) => {
+  // Cleanup on unmount
+  useEffect(() => () => stopAnimation(), [stopAnimation])
+
+  const handleMouseMove = useCallback((e) => {
+    if (!containerRef.current) return
+    const rect = containerRef.current.getBoundingClientRect()
+    targetRef.current = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    }
+    startAnimation()
+  }, [startAnimation])
+
+  const handleMouseEnter = useCallback((index) => {
     setHoveredIndex(index)
     setIsVisible(true)
-  }
+  }, [])
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     setHoveredIndex(null)
     setIsVisible(false)
-  }
+  }, [])
 
   return (
     <section ref={containerRef} onMouseMove={handleMouseMove} className="relative w-full max-w-4xl mx-auto px-6 py-16">
       <h2 className="text-zinc-400 text-sm font-medium tracking-wide uppercase mb-8">Selected Work</h2>
 
-      <div
-        className="hidden md:block pointer-events-none fixed z-50 overflow-hidden rounded-xl shadow-2xl"
-        style={{
-          left: containerRef.current?.getBoundingClientRect().left ?? 0,
-          top: containerRef.current?.getBoundingClientRect().top ?? 0,
-          transform: `translate3d(${smoothPosition.x + 20}px, ${smoothPosition.y - 100}px, 0)`,
-          opacity: isVisible ? 1 : 0,
-          scale: isVisible ? 1 : 0.8,
-          transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), scale 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-        }}
-      >
-        <div className="relative w-[280px] h-[180px] bg-zinc-800 rounded-xl overflow-hidden">
-          {projects.map((project, index) => (
-            <img
-              key={project.title}
-              src={project.image || "/placeholder.svg"}
-              alt={project.title}
-              className="absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-out"
-              style={{
-                opacity: hoveredIndex === index ? 1 : 0,
-                scale: hoveredIndex === index ? 1 : 1.1,
-                filter: hoveredIndex === index ? "none" : "blur(10px)",
-              }}
-            />
-          ))}
-          {/* Subtle gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/40 to-transparent" />
+      {/* Floating preview image — only rendered when hovering */}
+      {isVisible && (
+        <div
+          className="hidden md:block pointer-events-none fixed z-50 overflow-hidden rounded-xl shadow-2xl"
+          style={{
+            left: containerRef.current?.getBoundingClientRect().left ?? 0,
+            top: containerRef.current?.getBoundingClientRect().top ?? 0,
+            transform: `translate3d(${smoothPosition.x + 20}px, ${smoothPosition.y - 100}px, 0)`,
+            opacity: isVisible ? 1 : 0,
+            transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+          }}
+        >
+          <div className="relative w-[280px] h-[180px] bg-zinc-800 rounded-xl overflow-hidden">
+            {hoveredIndex !== null && projects[hoveredIndex] && (
+              <img
+                src={projects[hoveredIndex].image || "/placeholder.svg"}
+                alt={projects[hoveredIndex].title}
+                className="absolute inset-0 w-full h-full object-cover"
+                loading="lazy"
+              />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/40 to-transparent" />
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="space-y-0 text-white">
         {projects.map((project, index) => (
@@ -127,7 +137,7 @@ export function ProjectShowcase({ projects = defaultProjects }) {
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
           >
-            <div className="relative py-6 border-t border-zinc-800 transition-all duration-300 ease-out">
+            <div className="relative py-6 border-t border-zinc-800 transition-colors duration-300 ease-out">
               {/* Background highlight on hover */}
               <div
                 className={`
@@ -144,7 +154,6 @@ export function ProjectShowcase({ projects = defaultProjects }) {
                     <h3 className="text-white font-medium text-xl tracking-tight">
                       <span className="relative">
                         {project.title}
-                        {/* Animated underline */}
                         <span
                           className={`
                             absolute left-0 -bottom-0.5 h-px bg-white
@@ -155,7 +164,6 @@ export function ProjectShowcase({ projects = defaultProjects }) {
                       </span>
                     </h3>
 
-                    {/* Arrow that slides in */}
                     <ArrowUpRight
                       className={`
                         w-5 h-5 text-zinc-400
@@ -169,11 +177,10 @@ export function ProjectShowcase({ projects = defaultProjects }) {
                     />
                   </div>
 
-                  {/* Description with fade effect */}
                   <p
                     className={`
                       text-zinc-400 text-sm mt-2 leading-relaxed
-                      transition-all duration-300 ease-out
+                      transition-colors duration-300 ease-out
                       ${hoveredIndex === index ? "text-zinc-300" : "text-zinc-500"}
                     `}
                   >
@@ -187,8 +194,8 @@ export function ProjectShowcase({ projects = defaultProjects }) {
                         <span
                           key={i}
                           className={`
-                            rounded-full px-3 py-1 text-xs font-medium 
-                            transition-all duration-300 ease-out border
+                            rounded-full px-3 py-1 text-xs font-medium
+                            transition-colors duration-300 ease-out border
                             ${
                               hoveredIndex === index
                                 ? "border-zinc-600 bg-zinc-800 text-zinc-200"
@@ -207,7 +214,7 @@ export function ProjectShowcase({ projects = defaultProjects }) {
                 <span
                   className={`
                     text-xs font-mono text-zinc-500 tabular-nums
-                    transition-all duration-300 ease-out mt-1
+                    transition-colors duration-300 ease-out mt-1
                     ${hoveredIndex === index ? "text-zinc-400" : ""}
                   `}
                 >
@@ -221,9 +228,9 @@ export function ProjectShowcase({ projects = defaultProjects }) {
                   src={project.image || "/placeholder.svg"}
                   alt={project.title}
                   className="w-full h-[200px] object-cover"
+                  loading="lazy"
                 />
               </div>
-
             </div>
           </a>
         ))}

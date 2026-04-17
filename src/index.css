@@ -5,3 +5,13 @@
 :root {
   font-family: "Inter", sans-serif;
 }
+
+/* GPU-accelerated bounce for tech icons — replaces Framer Motion infinite loops */
+@keyframes tech-bounce {
+  0%, 100% { transform: translateY(-8px); }
+  50%       { transform: translateY(8px); }
+}
+.tech-icon {
+  animation: tech-bounce var(--bounce-dur, 2.5s) ease-in-out infinite;
+  will-change: transform;
+}
