@@ -2,8 +2,8 @@ import project1 from "../assets/projects/project-1.webp"
 import project2 from "../assets/projects/project-2.webp"
 import project3 from "../assets/projects/project-3.webp"
 import project4 from "../assets/projects/project-4.webp"
-import projectNexusAI from "../assets/projects/project-nexus-ai.png"
-import projectTenantWatch from "../assets/projects/project-tenantwatch.png"
+import projectNexusAI from "../assets/projects/project-nexus-ai-sm.jpg"
+import projectTenantWatch from "../assets/projects/project-tenantwatch-sm.jpg"
 
 export const HERO_CONTENT = [
   "I build intelligent, production-ready applications at the intersection of AI and full-stack development — from LLM-powered systems with Google Gemini to high-performance web apps with React, Next.js, and FastAPI.",
