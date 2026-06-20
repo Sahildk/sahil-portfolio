@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://sahilbuilds.tech/$1",
+      "permanent": true
+    }
+  ]
+}
